@@ -20,8 +20,8 @@ public class runContacts {
 
     // TODO: Menu System
     public static void menuSystem() {
-        // menu system for contacts - a do while loop
 
+        // boolean loopAgain to keep the menu looping until exit
         boolean loopAgain = true;
 
         do {
@@ -60,12 +60,12 @@ public class runContacts {
         } while (loopAgain);
     }
 
+    // string names for path and filename
+    public static String dirName = "data";
+    public static String filename = "contacts.txt";
+
     // TODO: add contacts
     public static void addContact() {
-
-        // string names for path and filename
-        String dirName = "data";
-        String filename = "contacts.txt";
 
         try {
 
@@ -74,18 +74,22 @@ public class runContacts {
             // Using static method to get filepath within directory stated above.
             Path dataFile = Paths.get(dirName, filename);
 
-            System.out.print("Please enter First Name: ");              // Ask first name
+            // Ask first name
+            System.out.print("Please enter First Name: ");
             Scanner scannerFirstName = new Scanner(System.in);
             String firstName = scannerFirstName.next();
 
-            System.out.print("Please enter Last Name: ");               // Ask last name
+            // Ask last name
+            System.out.print("Please enter Last Name: ");
             Scanner scannerLastName = new Scanner(System.in);
             String lastName = scannerLastName.next();
 
-            System.out.print("Please enter Phone Number: ");            // Ask phone number
+            // Ask phone number
+            System.out.print("Please enter Phone Number: ");
             Scanner scannerPhoneNumber = new Scanner(System.in);
             String phoneNumber = scannerPhoneNumber.next();
 
+            // Concat first and last name
             String fullName = firstName + " " + lastName;
 
             // format the contact being placed into contacts.txt
@@ -96,7 +100,6 @@ public class runContacts {
                 System.out.println("Writing to contacts.txt file!");
                 // Add a new name to the file.
                 Files.write(dataFile, Arrays.asList(contactLine), StandardOpenOption.APPEND);
-
             }
         } catch(IOException iox) {
             iox.printStackTrace();
@@ -145,18 +148,13 @@ public class runContacts {
     // TODO: display contacts
     public static void displayContacts() {
 
-        // string names for path and filename
-        String dirName = "data";
-        String filename = "contacts.txt";
-
         try {
 
             // Create a list of strings that represent the file data.
             List<String> fileData = Files.readAllLines(Paths.get(dirName, filename));
 
             // Print header
-            System.out.println("         Name         |       Number");
-            System.out.println("----------------------|-------------------");
+            printHeader();
 
             //Print out each line in the contacts.txt file
             for (String line: fileData) {
@@ -169,10 +167,12 @@ public class runContacts {
         }
     }
 
-    public static void createFileSystem() {
+    public static void printHeader () {
+        System.out.println("         Name         |       Number");
+        System.out.println("----------------------|-------------------");
+    }
 
-        String dirName = "data";
-        String filename = "contacts.txt";
+    public static void createFileSystem() {
 
         try {
 
@@ -206,10 +206,6 @@ public class runContacts {
     // TODO: search contacts
     public static void searchContacts() {
 
-        // string names for path and filename
-        String dirName = "data";
-        String filename = "contacts.txt";
-
         try {
 
             // Prompt for search item
@@ -220,14 +216,21 @@ public class runContacts {
             // Create a list of strings that represent the file data.
             List<String> fileData = Files.readAllLines(Paths.get(dirName, filename));
 
-            //Print out each line in the contacts.txt file
+            // Set boolean searchItemFound to false
             boolean searchItemFound = false;
+
+            // Print out each line in the contacts.txt file
+            boolean headerPrinted = true;
             for (String line: fileData) {
                 if (line.toLowerCase().contains(searchItem)) {
+                    if (headerPrinted) {printHeader();}
                     System.out.println(line);
-                    searchItemFound = true;
+                    searchItemFound = true;         // flip to true since item found
+                    headerPrinted = false;          // flip to false since item found and header has printed
                 }
             }
+
+            // Print out message if search item not found
             if (!searchItemFound) {
                 System.out.println("Sorry, search item not found.");
             }
@@ -239,10 +242,6 @@ public class runContacts {
 
     // TODO: delete contacts
     public static void deleteContacts() {
-
-        // string names for path and filename
-        String dirName = "data";
-        String filename = "contacts.txt";
 
         try {
 
@@ -257,8 +256,10 @@ public class runContacts {
             // New list to dump appropriate data.
             List<String> newList = new ArrayList<>();
 
-            // Loop thru each line in the contacts.txt file searching for searchDeleteItem
+            // Set boolean searchItemFound to false
             boolean searchItemFound = false;
+
+            // Loop thru each line in the contacts.txt file searching for searchDeleteItem
             for (String line: fileData) {
 
                 // Ask if found item/line is the info to delete
@@ -270,21 +271,22 @@ public class runContacts {
 
                     // If item found is the one to delete, skip over adding to newList
                     if (deleteYorN.equals("y")) {
-                        continue;
+                        continue;                       // deleted item is skipped over in adding to newList
                     }
-                    searchItemFound = true;
+                    searchItemFound = true;             // flip to true since item found
                 }
                 // otherwise add line to newList
                 newList.add(line);
             }
 
+            // Print out message if search item not found
             if (!searchItemFound) {
                 System.out.println("Sorry, search item not found.");
+
+            // Otherwise write addList to the contacts.txt file
             } else {
                 // Overwrite file with updated contents
                 Files.write(Paths.get(dirName, filename), newList);
-                // Re-assign list to updated file contents.
-//                fileData = Files.readAllLines(Paths.get(dirName, filename));
             }
 
         } catch( IOException iox) {
