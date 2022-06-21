@@ -220,13 +220,13 @@ public class runContacts {
             boolean searchItemFound = false;
 
             // Print out each line in the contacts.txt file
-            boolean headerPrinted = true;
+            boolean headerPrinted = false;
             for (String line: fileData) {
                 if (line.toLowerCase().contains(searchItem)) {
-                    if (headerPrinted) {printHeader();}
+                    if (!headerPrinted) {printHeader();}    //first time search item found, print header once
                     System.out.println(line);
                     searchItemFound = true;         // flip to true since item found
-                    headerPrinted = false;          // flip to false since item found and header has printed
+                    headerPrinted = true;          // flip to true since item found and header has printed
                 }
             }
 
