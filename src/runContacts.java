@@ -1,60 +1,247 @@
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
+import static java.nio.file.Files.createFile;
 
 public class runContacts {
 
     public static void main(String[] args) {
 
-        menuSystem();
+        createFileSystem();                         // create directory and contacts file
+        menuSystem();                               // operates CLI menu system
+                                                    // TODO: display contacts
+                                                    // add contacts
+                                                    // TODO: search contacts
+                                                    // TODO: delete contacts
 
     }
 
     public static void menuSystem() {
         // menu system for contacts - a do while loop
 
-        boolean invalid = true;
+        boolean loopAgain = true;
 
         do {
 
-            System.out.println("1. View contacts.\n" +
+            System.out.print("1. View contacts.\n" +
                     "2. Add a new contact.\n" +
                     "3. Search a contact by name.\n" +
                     "4. Delete an existing contact.\n" +
                     "5. Exit.\n" +
-                    "Enter an option (1, 2, 3, 4 or 5):");
-            System.out.println();
-            Scanner scanner = new Scanner(System.in);
+                    "Enter an option (1, 2, 3, 4 or 5): ");
 
-            String userInput = scanner.next().toString();
+            Scanner scanner = new Scanner(System.in);
+            String userInput = scanner.next();       // Getting input as a String
 
             switch (userInput) {
-                case "1":                                       // View contacts
-                    System.out.println("Case 1");
-                    break;
-                case "2":                                       // Add new contact
-                    System.out.println("Case 2");
-                    break;
-                case "3":                                       // Search for contact
-                    System.out.print("Please enter search term: ");
-                    Scanner scanner2 = new Scanner(System.in);
-                    String nameSearch = scanner2.next().toLowerCase();
-                    searchContact(nameSearch);
-                    break;
-                case "4":                                       // Delete contact
-                    System.out.println("Case 4");
-                    break;
-                case "5":                                       // Exit
+                case "1" ->                                       // View contacts
+                    displayContacts();
+                case "2" -> {                                     // Add new contact
+                    addContact();
+                    System.out.println();
+                }
+                case "3" -> {                                     // Search for contact
+                    searchContacts();
+                    System.out.println();
+                }
+                case "4" ->                                       // Delete contact
+                    deleteContacts();
+
+                case "5" -> {                                     // Exit
                     System.out.println("Thanks");
-                    invalid = false;
-                    break;
-                default:
-                    System.out.println("Sorry, invalid input, please try again");
-                    break;
+                    loopAgain = false;
+                }
+                default -> System.out.println("Sorry, invalid input, please try again");
             }
-        } while (invalid);
+        } while (loopAgain);
     }
-    public static String searchContact(String searchTerm) {
-        String maryString = "Mary had a little lamb";
-        System.out.println(maryString.toLowerCase().indexOf(searchTerm));
-        return searchTerm;
+
+    public static void addContact() {
+
+        // string names for path and filename
+        String dirName = "data";
+        String filename = "contacts.txt";
+
+        try {
+
+            // Using static method to get filepath for directory.
+            Path dataDirectory = Paths.get(dirName);
+            // Using static method to get filepath within directory stated above.
+            Path dataFile = Paths.get(dirName, filename);
+
+            System.out.print("Please enter First Name: ");              // Ask first name
+            Scanner scannerFirstName = new Scanner(System.in);
+            String firstName = scannerFirstName.next();
+
+            System.out.print("Please enter Last Name: ");               // Ask last name
+            Scanner scannerLastName = new Scanner(System.in);
+            String lastName = scannerLastName.next();
+
+            System.out.print("Please enter Phone Number: ");            // Ask phone number
+            Scanner scannerPhoneNumber = new Scanner(System.in);
+            String phoneNumber = scannerPhoneNumber.next();
+
+            String contactLine = firstName + " " + lastName + " " + phoneNumber;
+//            System.out.println(contactLine);                            // test to see concatted string
+
+            if(Files.exists(dataFile)) {
+                // Files.write(Path path, List<> data)
+                System.out.println("Writing to contacts.txt file!");
+                // Add a new name to the file.
+                Files.write(dataFile, Arrays.asList(contactLine), StandardOpenOption.APPEND);
+
+            }
+        } catch(IOException iox) {
+            iox.printStackTrace();
+        }
+    }
+
+    public static void displayContacts() {
+
+        // string names for path and filename
+        String dirName = "data";
+        String filename = "contacts.txt";
+
+        try {
+
+            // Create a list of strings that represent the file data.
+            List<String> fileData = Files.readAllLines(Paths.get(dirName, filename));
+
+            //Print out each line in the contacts.txt file
+            for (String line: fileData) {
+                System.out.println(line);
+            }
+            System.out.println();
+
+        } catch( IOException iox) {
+            iox.printStackTrace();
+        }
+    }
+
+    public static void createFileSystem() {
+
+        String dirName = "data";
+        String filename = "contacts.txt";
+
+        try {
+
+            // Using static method to get filepath for directory.
+            Path dataDirectory = Paths.get(dirName);
+            // Using static method to get filepath within directory stated above.
+            Path dataFile = Paths.get(dirName, filename);
+
+            // Files class - contains static methods to manipulate files.
+            // Files.exists() - returns boolean
+            // Files.notExists() - returns boolean
+
+            // Create a directory if it does not exist.
+            if(Files.notExists(dataDirectory)) {
+                System.out.println("Creating new directory named: " + dataDirectory);
+//                 Files.createDirectories(Path path) - returns a Path
+                Files.createDirectories(dataDirectory); // accepts a Path object
+            }
+            // Create a file based on the path of the file.
+            if(!Files.exists(dataFile)) {
+                System.out.println("Your new file has been created!");
+                // Files.createFile(Path path) - returns a Path
+                createFile(dataFile);
+            }
+
+        } catch(IOException iox) {
+            iox.printStackTrace();
+        }
+    }
+
+    public static void searchContacts() {
+
+        // string names for path and filename
+        String dirName = "data";
+        String filename = "contacts.txt";
+
+        try {
+
+            // Prompt for search item
+            System.out.print("Please enter search item: ");
+            Scanner scannerSearch = new Scanner(System.in);
+            String searchItem = scannerSearch.next();
+
+            // Create a list of strings that represent the file data.
+            List<String> fileData = Files.readAllLines(Paths.get(dirName, filename));
+
+            //Print out each line in the contacts.txt file
+            boolean searchItemFound = false;
+            for (String line: fileData) {
+                if (line.toLowerCase().contains(searchItem)) {
+                    System.out.println(line);
+                    searchItemFound = true;
+                }
+            }
+            if (!searchItemFound) {
+                System.out.println("Sorry, search item not found.");
+            }
+
+        } catch( IOException iox) {
+            iox.printStackTrace();
+        }
+    }
+
+    public static void deleteContacts() {
+
+        // string names for path and filename
+        String dirName = "data";
+        String filename = "contacts.txt";
+
+        try {
+
+            // Prompt for search item
+            System.out.print("Please enter search item to find what you want to delete: ");
+            Scanner scannerSearchDelete = new Scanner(System.in);
+            String searchDeleteItem = scannerSearchDelete.next();
+
+            // Create a list of strings that represent the file data.
+            List<String> fileData = Files.readAllLines(Paths.get(dirName, filename));
+
+            // New list to dump appropriate data.
+            List<String> newList = new ArrayList<>();
+
+            // Loop thru each line in the contacts.txt file searching for searchDeleteItem
+            boolean searchItemFound = false;
+            for (String line: fileData) {
+
+                // Ask if found item/line is the info to delete
+                if (line.toLowerCase().contains(searchDeleteItem)) {
+                    System.out.println(line);
+                    System.out.println("Is this the information you want to delete?(Y/n):");
+                    Scanner askDelete = new Scanner(System.in);
+                    String deleteYorN = askDelete.next().toLowerCase();
+
+                    // If item found is the one to delete, skip over adding to newList
+                    if (deleteYorN.equals("y")) {
+                        continue;
+                    }
+                    searchItemFound = true;
+                }
+                // otherwise add line to newList
+                newList.add(line);
+            }
+
+            if (!searchItemFound) {
+                System.out.println("Sorry, search item not found.");
+            } else {
+                // Overwrite file with updated contents
+                Files.write(Paths.get(dirName, filename), newList);
+                // Re-assign list to updated file contents.
+//                fileData = Files.readAllLines(Paths.get(dirName, filename));
+            }
+
+        } catch( IOException iox) {
+            iox.printStackTrace();
+        }
     }
 }
