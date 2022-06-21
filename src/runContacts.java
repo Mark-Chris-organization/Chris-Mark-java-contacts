@@ -86,8 +86,10 @@ public class runContacts {
             Scanner scannerPhoneNumber = new Scanner(System.in);
             String phoneNumber = scannerPhoneNumber.next();
 
-            String contactLine = firstName + " " + lastName + " | " + phoneNumber;
-//            System.out.println(contactLine);                            // test to see concatted string
+            String fullName = firstName + " " + lastName;
+
+            // format the contact being placed into contacts.txt
+            String contactLine = addSpaces(fullName) + " | " + phoneNumber;
 
             if(Files.exists(dataFile)) {
                 // Files.write(Path path, List<> data)
@@ -101,6 +103,45 @@ public class runContacts {
         }
     }
 
+    // Method to add spaces to full name for output formatting
+    public static String addSpaces (String fullName) {
+
+        int gap = 21 - fullName.length();
+        String gapString = "";
+
+        switch (gap) {
+            case 14 ->
+                    gapString = "              ";
+            case 13 ->
+                    gapString = "             ";
+            case 12 ->
+                    gapString = "            ";
+            case 11 ->
+                    gapString = "           ";
+            case 10 ->
+                    gapString = "          ";
+            case 9 ->
+                    gapString = "         ";
+            case 8 ->
+                    gapString = "        ";
+            case 7 ->
+                    gapString = "       ";
+            case 6 ->
+                    gapString = "      ";
+            case 5 ->
+                    gapString = "     ";
+            case 4 ->
+                    gapString = "    ";
+            case 3 ->
+                    gapString = "   ";
+            case 2 ->
+                    gapString = "  ";
+            case 1 ->
+                    gapString =" ";
+        }
+        return fullName + gapString;
+    }
+
     // TODO: display contacts
     public static void displayContacts() {
 
@@ -112,6 +153,10 @@ public class runContacts {
 
             // Create a list of strings that represent the file data.
             List<String> fileData = Files.readAllLines(Paths.get(dirName, filename));
+
+            // Print header
+            System.out.println("         Name         |       Number");
+            System.out.println("----------------------|-------------------");
 
             //Print out each line in the contacts.txt file
             for (String line: fileData) {

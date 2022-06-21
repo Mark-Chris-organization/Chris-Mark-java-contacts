@@ -1,4 +1,9 @@
-Mary Lamb 1234567
-SpongeBob SquarePants 7654321
-Yogi Bear 1234567
-George Jetson 7654321
+Mary Lamb             | 1234567
+SpongeBob SquarePants | 7654321
+Yogi Bear             | 1234567
+George Jetson         | 7654321
+Fred Flintstone       | 1234567890
+Lucy Ricardo          | 1234567
+Scooby Doo            | 7654321
+George Washington     | 1234567890
+John Adams            | 7654321
