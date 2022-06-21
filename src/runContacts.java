@@ -15,13 +15,10 @@ public class runContacts {
 
         createFileSystem();                         // create directory and contacts file
         menuSystem();                               // operates CLI menu system
-                                                    // TODO: display contacts
-                                                    // add contacts
-                                                    // TODO: search contacts
-                                                    // TODO: delete contacts
 
     }
 
+    // TODO: Menu System
     public static void menuSystem() {
         // menu system for contacts - a do while loop
 
@@ -31,7 +28,7 @@ public class runContacts {
 
             System.out.print("1. View contacts.\n" +
                     "2. Add a new contact.\n" +
-                    "3. Search a contact by name.\n" +
+                    "3. Search for a contact.\n" +
                     "4. Delete an existing contact.\n" +
                     "5. Exit.\n" +
                     "Enter an option (1, 2, 3, 4 or 5): ");
@@ -42,6 +39,7 @@ public class runContacts {
             switch (userInput) {
                 case "1" ->                                       // View contacts
                     displayContacts();
+
                 case "2" -> {                                     // Add new contact
                     addContact();
                     System.out.println();
@@ -62,6 +60,7 @@ public class runContacts {
         } while (loopAgain);
     }
 
+    // TODO: add contacts
     public static void addContact() {
 
         // string names for path and filename
@@ -87,7 +86,7 @@ public class runContacts {
             Scanner scannerPhoneNumber = new Scanner(System.in);
             String phoneNumber = scannerPhoneNumber.next();
 
-            String contactLine = firstName + " " + lastName + " " + phoneNumber;
+            String contactLine = firstName + " " + lastName + " | " + phoneNumber;
 //            System.out.println(contactLine);                            // test to see concatted string
 
             if(Files.exists(dataFile)) {
@@ -102,6 +101,7 @@ public class runContacts {
         }
     }
 
+    // TODO: display contacts
     public static void displayContacts() {
 
         // string names for path and filename
@@ -158,6 +158,7 @@ public class runContacts {
         }
     }
 
+    // TODO: search contacts
     public static void searchContacts() {
 
         // string names for path and filename
@@ -191,6 +192,7 @@ public class runContacts {
         }
     }
 
+    // TODO: delete contacts
     public static void deleteContacts() {
 
         // string names for path and filename
@@ -200,7 +202,7 @@ public class runContacts {
         try {
 
             // Prompt for search item
-            System.out.print("Please enter search item to find what you want to delete: ");
+            System.out.print("To delete, please enter search item: ");
             Scanner scannerSearchDelete = new Scanner(System.in);
             String searchDeleteItem = scannerSearchDelete.next();
 
@@ -216,8 +218,8 @@ public class runContacts {
 
                 // Ask if found item/line is the info to delete
                 if (line.toLowerCase().contains(searchDeleteItem)) {
-                    System.out.println(line);
-                    System.out.println("Is this the information you want to delete?(Y/n):");
+                    System.out.printf("Found search info: %s  -  ", line);
+                    System.out.print("Is this the information you want to delete?(Y/n):");
                     Scanner askDelete = new Scanner(System.in);
                     String deleteYorN = askDelete.next().toLowerCase();
 
