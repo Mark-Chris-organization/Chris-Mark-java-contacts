@@ -6,6 +6,6 @@ George Jetson         | 7654321
 Fred Flintstone       | 1234567890
 Lucy Ricardo          | 1234567
 Scooby Doo            | 7654321
-George Washington     | 1234567890
 John Adams            | 7654321
 George Jungle         | 7654321
+Thomas Jefferson      | 7654321
